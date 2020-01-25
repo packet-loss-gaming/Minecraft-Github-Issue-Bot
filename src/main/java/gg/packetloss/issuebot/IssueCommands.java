@@ -36,7 +36,7 @@ public class IssueCommands {
 
     @Command(name = "report", desc = "Report a problem")
     public void warp(CommandSender sender,
-                     @Arg(desc = "Destination warp", variable = true) List<String> issueText) {
+                     @Arg(desc = "A description of the issue encountered", variable = true) List<String> issueText) {
         if (component.isOnCooldown(sender)) {
             sender.sendMessage(ChatColor.RED + "Slow down champ, you've reported too many issues, too quickly.");
             return;
