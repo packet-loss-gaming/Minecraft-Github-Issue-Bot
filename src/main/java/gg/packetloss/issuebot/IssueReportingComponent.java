@@ -17,7 +17,6 @@
 
 package gg.packetloss.issuebot;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sk89q.commandbook.CommandBook;

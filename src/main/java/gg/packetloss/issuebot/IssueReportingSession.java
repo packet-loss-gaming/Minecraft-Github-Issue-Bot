@@ -19,7 +19,6 @@ package gg.packetloss.issuebot;
 
 import com.sk89q.commandbook.component.session.PersistentSession;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

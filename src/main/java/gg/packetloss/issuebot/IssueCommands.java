@@ -18,7 +18,6 @@
 package gg.packetloss.issuebot;
 
 import com.google.common.base.Joiner;
-import com.sk89q.minecraft.util.commands.CommandException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.enginehub.piston.annotation.Command;
