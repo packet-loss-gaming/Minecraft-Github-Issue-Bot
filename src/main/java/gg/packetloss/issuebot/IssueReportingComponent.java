@@ -28,6 +28,8 @@ import com.zachsthings.libcomponents.InjectComponent;
 import com.zachsthings.libcomponents.bukkit.BukkitComponent;
 import com.zachsthings.libcomponents.config.ConfigurationBase;
 import com.zachsthings.libcomponents.config.Setting;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -79,10 +81,58 @@ public class IssueReportingComponent extends BukkitComponent implements Listener
         return !getSession(sender).canReportIssues();
     }
 
+    private String getTitle(String issueText) {
+        StringBuilder title = new StringBuilder();
+
+        String[] words = issueText.split(" ");
+        for (String word : words) {
+            if (word.isBlank()) {
+                continue;
+            }
+
+            title.append(WordUtils.capitalize(word));
+
+            // Break if we've hit a period
+            if (title.charAt(title.length() - 1) == '.') {
+                title.deleteCharAt(title.length() - 1);
+                break;
+            }
+
+            // Break if we've went over 50 characters
+            if (title.length() > 50) {
+                break;
+            }
+
+            title.append(' ');
+        }
+
+        return title.toString();
+    }
+
     private final String NEW_PARAGRAPH = "\n\n";
+
+    private String getFormattedIssueText(String issueText) {
+        StringBuilder builder = new StringBuilder();
+
+        String[] sentences = issueText.split("\\.( |$)");
+        for (String sentence : sentences) {
+            if (sentence.isBlank()) {
+                continue;
+            }
+
+            builder.append(StringUtils.capitalize(sentence.toLowerCase()));
+            builder.append(". ");
+        }
+
+        return builder.toString();
+    }
 
     private String getBody(CommandSender sender, String issueText) {
         StringBuilder bodyText = new StringBuilder();
+
+        // A report information first, for better descriptions in hover text
+        bodyText.append(getFormattedIssueText(issueText));
+        bodyText.append(NEW_PARAGRAPH);
 
         // Add reporter name and UUID
         bodyText.append("Reporter: ").append(sender.getName());
@@ -98,17 +148,15 @@ public class IssueReportingComponent extends BukkitComponent implements Listener
             bodyText.append(" at ").append(location.getBlockX());
             bodyText.append(", ").append(location.getBlockY());
             bodyText.append(", ").append(location.getBlockZ());
-            bodyText.append(NEW_PARAGRAPH);
         }
 
-        bodyText.append(issueText);
         return bodyText.toString();
     }
 
     public CompletableFuture<HttpResponse<String>> createIssue(CommandSender sender, String issueText) {
         getSession(sender).reportedIssue();
 
-        String title = issueText.substring(0, Math.min(30, issueText.length()));
+        String title = getTitle(issueText);
         String body = getBody(sender, issueText);
 
         JsonObject object = new JsonObject();
