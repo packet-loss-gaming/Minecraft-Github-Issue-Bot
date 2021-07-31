@@ -53,9 +53,8 @@ public class IssueReportingComponent extends BukkitComponent implements Listener
     public void enable() {
         this.config = configure(new LocalConfiguration());
 
-        ComponentCommandRegistrar registrar = CommandBook.getComponentRegistrar();
-        registrar.registerTopLevelCommands((commandManager, registration) -> {
-            registration.register(commandManager, IssueCommandsRegistration.builder(), new IssueCommands(this));
+        CommandBook.getComponentRegistrar().registerTopLevelCommands((registrar) -> {
+            registrar.register(IssueCommandsRegistration.builder(), new IssueCommands(this));
         });
     }
 
